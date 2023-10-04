@@ -21,18 +21,16 @@ public class LivroDao {
     }
 
     public void inserir(Livro livro) throws SQLException{
-            var sql = "INSERT INTO TBL_LIVRO (livro) VALUES (?) ";
+            var sql = "INSERT INTO TBL_LIVRO (livro, autor_id) VALUES (?, ?) ";
             var comando = conexao.prepareStatement(sql);
             comando.setString(1, livro.getLivro());
             comando.setLong(2, livro.getAutor().getId());
 
             comando.executeUpdate();
-
-
     }
 
     public List<Livro> listarTodos() throws SQLException{
-         var comando = conexao.prepareStatement("SELECT * FROM TBL_LIVRO");
+         var comando = conexao.prepareStatement("SELECT tbl_livro.*, tbl_autor.nome, tbl_autor.email FROM TBL_LIVRO INNER JOIN tbl_autor ON tbl_livro.autor_id = tbl_autor.autor_id");
          var resultado = comando.executeQuery();
             
         var lista = new ArrayList<Livro>();
@@ -49,7 +47,6 @@ public class LivroDao {
                 )
             );
         }
-
         return lista;
     }
 

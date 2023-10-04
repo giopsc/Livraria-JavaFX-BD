@@ -33,6 +33,11 @@ public class Livro {
         return this;
     }
 
+    public Livro autor(Autor autor2) {
+        this.autor = getAutor();
+        return this;
+    }
+
     public Autor getAutor() {
         return autor;
     }

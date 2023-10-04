@@ -1,6 +1,5 @@
 package com.example;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -29,7 +28,7 @@ public class PrimaryController implements Initializable {
     
     @FXML TableView<Livro> tabelaLivro;    
     @FXML TableColumn<Livro, String> colLivro;
-    @FXML TableColumn<Livro, String> colAutor;
+    @FXML TableColumn<Livro, Autor> colAutor;
     
     @FXML private TextField txtAutor;
     @FXML private TextField txtEmail;
@@ -74,7 +73,6 @@ public class PrimaryController implements Initializable {
         }catch(SQLException e){
             e.printStackTrace();
         }
-
     }
 
     private void consultarLivro() {
@@ -82,7 +80,7 @@ public class PrimaryController implements Initializable {
             livroDao.listarTodos().forEach(livro -> tabelaLivro.getItems().add(livro));
         } catch (SQLException e) {
             e.printStackTrace();
-            mostrarMensagemDeErro("Não foi possivel carregar os dados do banco");
+            mostrarMensagemDeErro("Não foi possivel carregar os dados dos livros");
         }
     }
 
@@ -91,7 +89,7 @@ public class PrimaryController implements Initializable {
             autorDao.listarTodos().forEach(autor -> tabelaAutor.getItems().add(autor));
         } catch (SQLException e) {
             e.printStackTrace();
-            mostrarMensagemDeErro("Não foi possivel carregar os dados do banco");
+            mostrarMensagemDeErro("Não foi possivel carregar os dados dos autores");
         }
     }
 
@@ -164,21 +162,21 @@ public class PrimaryController implements Initializable {
         });
 
         colAutor.setCellValueFactory(new PropertyValueFactory<>("autor"));
-        colAutor.setCellFactory(TextFieldTableCell.forTableColumn());
         colAutor.setOnEditCommit(event -> {
-            atualizarLivro(event.getRowValue().livro(event.getNewValue()));
+            atualizarLivro(event.getRowValue().autor(event.getNewValue()));
         });
 
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colNome.setCellFactory(TextFieldTableCell.forTableColumn());
-        // colAutor.setOnEditCommit(event -> {
-        //     atualizarAutor(event.getRowValue().autor(event.getNewValue()));
-        // });
-
+        colNome.setOnEditCommit(event -> {
+            atualizarAutor(event.getRowValue().autor(event.getNewValue()));
+        });
+        
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        colAutor.setCellValueFactory(new PropertyValueFactory<>("autor"));
+        colEmail.setOnEditCommit(event -> {
+            atualizarAutor(event.getRowValue().autor(event.getNewValue()));
+        });
 
         tabelaLivro.setEditable(true);
         tabelaAutor.setEditable(true);
@@ -193,7 +191,7 @@ public class PrimaryController implements Initializable {
             autorDao.atualizar(autor);
         } catch (SQLException e) {
             e.printStackTrace();
-            mostrarMensagemDeErro("Erro ao atualizar dados do livro");
+            mostrarMensagemDeErro("Erro ao atualizar autor");
         }
     }
 
